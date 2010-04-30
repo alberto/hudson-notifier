@@ -3,17 +3,17 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-class HelloTray:
+class HudsonTrayNotifier:
 
   def __init__(self):
     self.statusIcon = gtk.StatusIcon()
     self.statusIcon.set_from_stock(gtk.STOCK_ABOUT)
     self.statusIcon.set_visible(True)
-    self.statusIcon.set_tooltip("Hello World")
+    self.statusIcon.set_tooltip("Hudson notifier")
 
     self.menu = gtk.Menu()
-    self.menuItem = gtk.ImageMenuItem(gtk.STOCK_EXECUTE)
-    self.menuItem.connect('activate', self.execute_cb, self.statusIcon)
+    self.menuItem = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
+    self.menuItem.connect('activate', self.prefs_cb, self.statusIcon)
     self.menu.append(self.menuItem)
     self.menuItem = gtk.ImageMenuItem(gtk.STOCK_QUIT)
     self.menuItem.connect('activate', self.quit_cb, self.statusIcon)
@@ -24,13 +24,12 @@ class HelloTray:
 
     gtk.main()
 
-  def execute_cb(self, widget, event, data = None):
+  def prefs_cb(self, widget, event, data = None):
     window = gtk.Window(gtk.WINDOW_TOPLEVEL)
     window.set_border_width(10)
 
-    button = gtk.Button("Hello World")
+    button = gtk.Button("Close")
     button.connect_object("clicked", gtk.Widget.destroy, window)
-
     window.add(button)
     button.show()
     window.show()
@@ -46,4 +45,4 @@ class HelloTray:
                    3, time, self.statusIcon)
 
 if __name__ == "__main__":
-  helloWord = HelloTray()
+  helloWord = HudsonTrayNotifier()
