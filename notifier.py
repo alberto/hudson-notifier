@@ -3,12 +3,13 @@ import feedparser
 import pynotify
 import time
 
-class Notifier:
+class Notifier():
   BASE_TITLE = 'Hudson Update!'
   TIMEOUT = 1000
 
   def __init__(self):
-	self.main()
+	self.last_displayed = dict()
+	pynotify.init('Hudson Notify')
 
   def success(self, job, build):
 	n = pynotify.Notification(self.BASE_TITLE,
@@ -34,9 +35,12 @@ class Notifier:
 	return n
 
   def main(self):
-	pynotify.init('Hudson Notify')
-	last_displayed = dict() 
 	while True:
+		self.poll()
+		time.sleep(60)
+
+
+  def poll(self):
 		print "UPDATING..."	
 		url = 'http://www.newdawnsoftware.com/hudson/view/LWJGL/rssLatest'
 		feed = feedparser.parse(url)
@@ -45,9 +49,9 @@ class Notifier:
 			i = i.split(' ')
 			job, build, status = (i[0], i[1], i[2])
 			
-			if job in last_displayed and last_displayed[job] == (build, status):
+			if job in self.last_displayed and self.last_displayed[job] == (build, status):
 				continue
-			last_displayed[job] = (build, status)
+			self.last_displayed[job] = (build, status)
 			status = status.replace('(', '').replace(')','')
 			if status == 'SUCCESS':
 				self.success(job, build).show()
@@ -55,7 +59,6 @@ class Notifier:
 				self.unstable(job, build).show()
 			elif status == 'FAILURE':
 				self.failure(job, build).show()
-		time.sleep(20)
-
+		return True
 if __name__ == '__main__':
-	Notifier()
+	Notifier().main()

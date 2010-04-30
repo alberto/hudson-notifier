@@ -2,6 +2,8 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
+from notifier import Notifier
+import gobject
 
 class HudsonTrayNotifier:
 
@@ -12,17 +14,21 @@ class HudsonTrayNotifier:
     self.statusIcon.set_tooltip("Hudson notifier")
 
     self.menu = gtk.Menu()
-    self.menuItem = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
-    self.menuItem.connect('activate', self.prefs_cb, self.statusIcon)
-    self.menu.append(self.menuItem)
+#    self.menuItem = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
+#    self.menuItem.connect('activate', self.prefs_cb, self.statusIcon)
+#    self.menu.append(self.menuItem)
     self.menuItem = gtk.ImageMenuItem(gtk.STOCK_QUIT)
     self.menuItem.connect('activate', self.quit_cb, self.statusIcon)
     self.menu.append(self.menuItem)
 
     self.statusIcon.connect('popup-menu', self.popup_menu_cb, self.menu)
     self.statusIcon.set_visible(1)
-
+    self.notifier = Notifier()
+    gobject.timeout_add(5000, self.poll)
     gtk.main()
+
+  def poll(self):
+    return self.notifier.poll()
 
   def prefs_cb(self, widget, event, data = None):
     window = gtk.Window(gtk.WINDOW_TOPLEVEL)
