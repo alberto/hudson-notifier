@@ -4,12 +4,16 @@ pygtk.require('2.0')
 import gtk
 from notifier import Notifier
 import gobject
+import os
 
 class HudsonTrayNotifier:
 
 	def __init__(self):
+		dir_path = os.path.dirname(__file__)
+		LOGO_IMG = os.path.abspath(dir_path + '/../imgs/logo.png')
+
 		self.statusIcon = gtk.StatusIcon()
-		self.statusIcon.set_from_stock(gtk.STOCK_ABOUT)
+		self.statusIcon.set_from_file(LOGO_IMG)
 		self.statusIcon.set_visible(True)
 		self.statusIcon.set_tooltip("Hudson notifier")
 
