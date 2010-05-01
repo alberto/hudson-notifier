@@ -9,7 +9,6 @@ class Notifier():
 	SUCCESS_IMG = 'file:///usr/share/pixmaps/gnome-suse.png'
 	UNSTABLE_IMG = 'file:///usr/share/pixmaps/gnome-suse.png'
 	FAILURE_IMG = 'file:///usr/share/pixmaps/gnome-suse.png'
-	url = 'http://www.newdawnsoftware.com/hudson/view/LWJGL/rssLatest'
 
 	def __init__(self):
 		self.last_displayed = dict()
@@ -38,32 +37,22 @@ class Notifier():
 		n.set_timeout(self.TIMEOUT)
 		return n
 
-	def main(self):
-		while True:
-			self.poll()
-			time.sleep(60)
+	def poll(self, urls):
+		for url in urls:
+			feed = feedparser.parse(url)
+			items = [t['title'] for t in feed['entries']]
+			for i in items:
+				i = i.split(' ')
+				job, build, status = (i[0], i[1], i[2])
 
-
-def poll(self):
-	print "UPDATING..."
-	url = self.url
-	feed = feedparser.parse(url)
-	items = [t['title'] for t in feed['entries']]
-	for i in items:
-		i = i.split(' ')
-		job, build, status = (i[0], i[1], i[2])
-
-		if job in self.last_displayed and self.last_displayed[job] == (build, status):
-			continue
-		self.last_displayed[job] = (build, status)
-		status = status.replace('(', '').replace(')', '')
-		if status == 'SUCCESS':
-			self.success(job, build).show()
-		elif status == 'UNSTABLE':
-			self.unstable(job, build).show()
-		elif status == 'FAILURE':
-			self.failure(job, build).show()
-	return True
-
-if __name__ == '__main__':
-	Notifier().main()
+				if job in self.last_displayed and self.last_displayed[job] == (build, status):
+					continue
+				self.last_displayed[job] = (build, status)
+				status = status.replace('(', '').replace(')', '')
+				if status == 'SUCCESS':
+					self.success(job, build).show()
+				elif status == 'UNSTABLE':
+					self.unstable(job, build).show()
+				elif status == 'FAILURE':
+					self.failure(job, build).show()
+		return True

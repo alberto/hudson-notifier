@@ -24,11 +24,17 @@ class HudsonTrayNotifier:
 		self.statusIcon.connect('popup-menu', self.popup_menu_cb, self.menu)
 		self.statusIcon.set_visible(1)
 		self.notifier = Notifier()
-		gobject.timeout_add(5000, self.poll)
+
+		gobject.timeout_add(60000, self.poll)
 		gtk.main()
 
+	def getUrls(self):
+		return ['http://www.newdawnsoftware.com/hudson/view/LWJGL/rssLatest',
+		'http://www.newdawnsoftware.com/hudson/view/LWJGL/rssLatest']
+
 	def poll(self):
-		return self.notifier.poll()
+		urls = self.getUrls()
+		return self.notifier.poll(urls)
 
 	def prefs_cb(self, widget, event, data = None):
 		window = gtk.Window(gtk.WINDOW_TOPLEVEL)
