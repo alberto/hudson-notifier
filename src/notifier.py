@@ -6,6 +6,10 @@ import time
 class Notifier():
   BASE_TITLE = 'Hudson Update!'
   TIMEOUT = 1000
+  SUCCESS_IMG = 'file:///usr/share/pixmaps/gnome-suse.png'
+  UNSTABLE_IMG = 'file:///usr/share/pixmaps/gnome-suse.png'
+  FAILURE_IMG = 'file:///usr/share/pixmaps/gnome-suse.png'
+  url = 'http://www.newdawnsoftware.com/hudson/view/LWJGL/rssLatest'
 
   def __init__(self):
 	self.last_displayed = dict()
@@ -14,7 +18,7 @@ class Notifier():
   def success(self, job, build):
 	n = pynotify.Notification(self.BASE_TITLE,
 	'"%s"  %s successfully built :)' % (job, build),
-	'file:///usr/share/pixmaps/gnome-suse.png')
+	self.SUCCESS_IMG)
 	n.set_urgency(pynotify.URGENCY_LOW)
 	n.set_timeout(self.TIMEOUT)
 	return n
@@ -22,14 +26,14 @@ class Notifier():
   def unstable(self, job, build):
 	n = pynotify.Notification(self.BASE_TITLE,
 		'"%s" %s is unstable :-/' % (job, build),
-		'file:///usr/share/pixmaps/gnome-suse.png')
+	self.UNSTABLE_IMG)
 	n.set_timeout(self.TIMEOUT)
 	return n
 
   def failure(self, job, build):
 	n = pynotify.Notification(self.BASE_TITLE,
 	'"%s" %s failed!' % (job, build),
-	'file:///usr/share/pixmaps/gnome-suse.png')
+	self.FAILURE_IMG)
 	n.set_urgency(pynotify.URGENCY_CRITICAL)
 	n.set_timeout(self.TIMEOUT)
 	return n
@@ -42,7 +46,7 @@ class Notifier():
 
   def poll(self):
 		print "UPDATING..."	
-		url = 'http://www.newdawnsoftware.com/hudson/view/LWJGL/rssLatest'
+		url = self.url
 		feed = feedparser.parse(url)
 		items = [t['title'] for t in feed['entries']]
 		for i in items:
