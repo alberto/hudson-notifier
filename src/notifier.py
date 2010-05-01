@@ -14,7 +14,6 @@ class Notifier():
 	def __init__(self):
 		self.last_displayed = dict()
 		pynotify.init('Hudson Notify')
-		print self.SUCCESS_IMG
 
 	def success(self, job, build):
 		n = pynotify.Notification(self.BASE_TITLE,
