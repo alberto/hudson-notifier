@@ -25,7 +25,7 @@ class HudsonTrayNotifier:
 		self.statusIcon.set_visible(1)
 		self.notifier = Notifier()
 
-		gobject.timeout_add(60000, self.poll)
+		gobject.timeout_add(6000, self.poll)
 		gtk.main()
 
 	def getUrls(self):

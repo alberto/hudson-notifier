@@ -1,18 +1,20 @@
 #!/usr/bin/env python
 import feedparser
 import pynotify
-import time
+import os
 
 class Notifier():
 	BASE_TITLE = 'Hudson Update!'
 	TIMEOUT = 1000
-	SUCCESS_IMG = 'file:///usr/share/pixmaps/gnome-suse.png'
-	UNSTABLE_IMG = 'file:///usr/share/pixmaps/gnome-suse.png'
-	FAILURE_IMG = 'file:///usr/share/pixmaps/gnome-suse.png'
+	dir_path = os.path.dirname(__file__)
+	SUCCESS_IMG = os.path.abspath(dir_path + '/../imgs/success.png')
+	UNSTABLE_IMG = os.path.abspath(dir_path + '/../imgs/unstable.png')
+	FAILURE_IMG = os.path.abspath(dir_path + '/../imgs/failure.png')
 
 	def __init__(self):
 		self.last_displayed = dict()
 		pynotify.init('Hudson Notify')
+		print self.SUCCESS_IMG
 
 	def success(self, job, build):
 		n = pynotify.Notification(self.BASE_TITLE,
