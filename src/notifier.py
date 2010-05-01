@@ -4,7 +4,7 @@ import pynotify
 import os
 
 class Notifier():
-	BASE_TITLE = 'Hudson Update!'
+	BASE_TITLE = 'Hudson Update'
 	TIMEOUT = 1000
 	dir_path = os.path.dirname(__file__)
 	SUCCESS_IMG = os.path.abspath(dir_path + '/../imgs/success.png')
@@ -13,11 +13,11 @@ class Notifier():
 
 	def __init__(self):
 		self.last_displayed = dict()
-		pynotify.init('Hudson Notify')
+		pynotify.init('Hudson Notifier')
 
 	def success(self, job, build):
 		n = pynotify.Notification(self.BASE_TITLE,
-	'"%s"  %s successfully built :)' % (job, build),
+	'"%s"  %s successfully built.' % (job, build),
 		self.SUCCESS_IMG)
 		n.set_urgency(pynotify.URGENCY_LOW)
 		n.set_timeout(self.TIMEOUT)
@@ -25,7 +25,7 @@ class Notifier():
 
 	def unstable(self, job, build):
 		n = pynotify.Notification(self.BASE_TITLE,
-		'"%s" %s is unstable :-/' % (job, build),
+		'"%s" %s is unstable.' % (job, build),
 		self.UNSTABLE_IMG)
 		n.set_timeout(self.TIMEOUT)
 		return n
