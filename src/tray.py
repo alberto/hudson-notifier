@@ -33,8 +33,8 @@ class HudsonTrayNotifier:
 		gtk.main()
 
 	def getUrls(self):
-		return ['http://www.newdawnsoftware.com/hudson/view/LWJGL/rssLatest',
-		'http://www.newdawnsoftware.com/hudson/view/LWJGL/rssLatest']
+		fileHandle = open('config.txt')
+		return fileHandle.readlines()
 
 	def poll(self):
 		urls = self.getUrls()
