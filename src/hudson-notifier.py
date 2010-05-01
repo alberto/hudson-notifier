@@ -6,7 +6,7 @@ from notifier import Notifier
 import gobject
 import os
 
-class HudsonTrayNotifier:
+class HudsonNotifier:
 
 	def __init__(self):
 		dir_path = os.path.dirname(__file__)
@@ -61,5 +61,5 @@ class HudsonTrayNotifier:
 						3, time, self.statusIcon)
 
 if __name__ == "__main__":
-	helloWord = HudsonTrayNotifier()
+	helloWord = HudsonNotifier()
 
