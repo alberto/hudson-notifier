@@ -11,30 +11,23 @@ class Notifier():
 	UNSTABLE_IMG = os.path.abspath(dir_path + '/../imgs/unstable.png')
 	FAILURE_IMG = os.path.abspath(dir_path + '/../imgs/failure.png')
 
+	statuses = {
+		'success' : [ '"%s" %s successfully built.', SUCCESS_IMG, pynotify.URGENCY_LOW],
+		'unstable' : [ '"%s" %s is unstable.', UNSTABLE_IMG, pynotify.URGENCY_NORMAL],
+		'failure' : [ '"%s" %s failed!', FAILURE_IMG, pynotify.URGENCY_CRITICAL]
+	}
+
 	def __init__(self):
 		self.last_displayed = dict()
 		pynotify.init('Hudson Notifier')
 
-	def success(self, job, build):
-		n = pynotify.Notification(self.BASE_TITLE,
-	'"%s"  %s successfully built.' % (job, build),
-		self.SUCCESS_IMG)
-		n.set_urgency(pynotify.URGENCY_LOW)
-		n.set_timeout(self.TIMEOUT)
-		return n
-
-	def unstable(self, job, build):
-		n = pynotify.Notification(self.BASE_TITLE,
-		'"%s" %s is unstable.' % (job, build),
-		self.UNSTABLE_IMG)
-		n.set_timeout(self.TIMEOUT)
-		return n
-
-	def failure(self, job, build):
-		n = pynotify.Notification(self.BASE_TITLE,
-		'"%s" %s failed!' % (job, build),
-		self.FAILURE_IMG)
-		n.set_urgency(pynotify.URGENCY_CRITICAL)
+	def notify(self, job, build, status):
+		status_values = self.statuses[status]
+		n = pynotify.Notification(
+			self.BASE_TITLE,
+			status_values[0] % (job, build),
+			status_values[1])
+		n.set_urgency(status_values[2])
 		n.set_timeout(self.TIMEOUT)
 		return n
 
@@ -42,18 +35,20 @@ class Notifier():
 		for url in urls:
 			feed = feedparser.parse(url)
 			items = [t['title'] for t in feed['entries']]
-			for i in items:
-				i = i.split(' ')
-				job, build, status = (i[0], i[1], i[2])
-
-				if job in self.last_displayed and self.last_displayed[job] == (build, status):
+			for item in items:
+				build, job, status = self._get_build_info(item)
+				if self._is_old_build(job, build, status):
 					continue
 				self.last_displayed[job] = (build, status)
-				status = status.replace('(', '').replace(')', '')
-				if status == 'SUCCESS':
-					self.success(job, build).show()
-				elif status == 'UNSTABLE':
-					self.unstable(job, build).show()
-				elif status == 'FAILURE':
-					self.failure(job, build).show()
+				self.notify(job, build, status).show()
 		return True
+
+	def _get_build_info(self, item):
+		item = item.split(' ')
+		job, build = item[0], item[1]
+		status = item[2].replace('(', '').replace(')', '').lower()
+		return build, job, status
+
+	def _is_old_build(self, job, build, status):
+		return (job in self.last_displayed
+			and self.last_displayed[job] == (build, status))
