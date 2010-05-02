@@ -7,49 +7,49 @@ from preferences import Preferences
 import gobject
 import os
 
-class HudsonNotifier:
+class HudsonNotifierUI:
 	def __init__(self):
-		self.setTrayApp()
-
+		self.preferences = Preferences()
 		self.notifier = Notifier()
+		self.configure_ui()
 		gobject.timeout_add(6000, self.poll)
 		gtk.main()
 
-	def setTrayApp(self):
+	def configure_ui(self):
+		self.gladefile = "main.glade"
+		self.glade = gtk.Builder()
+		self.glade.add_from_file(self.gladefile)
+
+		self.statusIcon = self.glade.get_object('tray_icon')
 		dir_path = os.path.dirname(__file__)
 		LOGO_IMG = os.path.abspath(dir_path + '/../imgs/logo.png')
-		self.statusIcon = gtk.StatusIcon()
 		self.statusIcon.set_from_file(LOGO_IMG)
-		self.statusIcon.set_visible(True)
-		self.statusIcon.set_tooltip("Hudson notifier")
+		self.connect_events()
 
-		self.preferences = Preferences()
-
-		self.menu = gtk.Menu()
-		self.menuItem = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
-		self.menuItem.connect('activate', self.preferences.open_prefs, self.statusIcon)
-		self.menu.append(self.menuItem)
-		self.menuItem = gtk.ImageMenuItem(gtk.STOCK_QUIT)
-		self.menuItem.connect('activate', self.quit_cb, self.statusIcon)
-		self.menu.append(self.menuItem)
-
+	def connect_events(self):
+		self.menu = self.glade.get_object('menu')
 		self.statusIcon.connect('popup-menu', self.popup_menu_cb, self.menu)
-		self.statusIcon.set_visible(1)
+
+		self.menuItem = self.glade.get_object('preferences')
+		self.menuItem.connect('activate', self.preferences.open_prefs, self.statusIcon)
+
+		self.menuItem = self.glade.get_object('quit')
+		self.menuItem.connect('activate', self.on_quit_activate, self.statusIcon)
 
 	def poll(self):
 		urls = self.preferences.getUrls()
 		return self.notifier.poll(urls)
 
-	def quit_cb(self, widget, data = None):
+	def on_quit_activate(self, widget, data = None):
 		gtk.main_quit()
 
 	def popup_menu_cb(self, widget, button, time, data = None):
 		if button == 3:
 			if data:
+
 				data.show_all()
 				data.popup(None, None, gtk.status_icon_position_menu,
 						3, time, self.statusIcon)
 
 if __name__ == "__main__":
-	hn = HudsonNotifier()
-
+	hn = HudsonNotifierUI()

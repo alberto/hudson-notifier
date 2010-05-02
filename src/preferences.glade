@@ -21,10 +21,12 @@
             <property name="can_focus">True</property>
             <property name="model">urls</property>
             <child>
-              <object class="GtkTreeViewColumn" id="enabled">
+              <object class="GtkTreeViewColumn" id="enabled_column">
                 <property name="title">Enabled</property>
                 <child>
-                  <object class="GtkCellRendererToggle" id="toggle_renderer"/>
+                  <object class="GtkCellRendererToggle" id="enabled">
+                    <signal name="toggled" handler="on_enabled_toggled" object="urls"/>
+                  </object>
                   <attributes>
                     <attribute name="active">0</attribute>
                   </attributes>
@@ -32,10 +34,13 @@
               </object>
             </child>
             <child>
-              <object class="GtkTreeViewColumn" id="url">
+              <object class="GtkTreeViewColumn" id="url_column">
                 <property name="title">Url</property>
                 <child>
-                  <object class="GtkCellRendererText" id="url_renderer"/>
+                  <object class="GtkCellRendererText" id="url_renderer">
+                    <property name="editable">True</property>
+                    <property name="font">Normal</property>
+                  </object>
                   <attributes>
                     <attribute name="text">1</attribute>
                   </attributes>
@@ -102,11 +107,5 @@
       <!-- column-name Url -->
       <column type="gchararray"/>
     </columns>
-    <data>
-      <row>
-        <col id="0">True</col>
-        <col id="1" translatable="yes">foo</col>
-      </row>
-    </data>
   </object>
 </interface>
