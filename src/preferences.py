@@ -2,7 +2,6 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-import gobject
 
 class Preferences:
 	def __init__(self):
@@ -41,12 +40,8 @@ class Preferences:
 		for act in self.load_prefs():
 			self.liststore.append([True, act])
 
-	def on_add_clicked(self, button):
-		self.liststore.append([True, ""])
-		self.focus_on_last_row()
-
 	def focus_on_last_row(self):
-		row = len(self.liststore) - 1
+		row = self._get_index_of_last_row()
 		column = self.treeView.get_column(1)
 		self.treeView.set_cursor(row, column, True)
 
@@ -70,7 +65,25 @@ class Preferences:
 
 	def on_url_edited(self, model, path, new_text):
 		iter = model.get_iter_from_string(path)
+		self.update_model(model, iter, 1, new_text)
+
+	def update_model(self, model, iter, column, new_text):
+		last_row = str(self._get_index_of_last_row())
+		row = model.get_string_from_iter(iter)
+		if (row != last_row and new_text == ""):
+			model.remove(iter)
+			self.treeView.set_model(model)
+			return
+
+		if (row == last_row and new_text != ""):
+			self.liststore.append([True, ""])
 		model.set_value(iter, 1, new_text)
+
+	def _get_number_of_elements(self):
+		return len(self.liststore)
+
+	def _get_index_of_last_row(self):
+		return self._get_number_of_elements() - 1
 
 if __name__ == "__main__":
 	pref = Preferences()
