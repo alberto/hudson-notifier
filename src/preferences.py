@@ -34,7 +34,10 @@ class Preferences:
 	def load_prefs(self):
 		fileHandle = open('config.txt')
 		file_lines = fileHandle.readlines()
-		return [line.replace('\n', '') for line in file_lines]
+		lines = [line.replace('\n', '') for line in file_lines]
+		if len(lines) == 0 or lines[-1] != "":
+			lines.append("")
+		return lines
 
 	def create_model(self):
 		for act in self.load_prefs():
