@@ -1,1 +1,2 @@
 http://www.newdawnsoftware.com/hudson/view/LWJGL/rssLatest
+http://www.newdawnsoftware.com/hudson/view/LWJGL/rssLatest
