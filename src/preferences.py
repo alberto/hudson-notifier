@@ -6,14 +6,18 @@ import gobject
 
 class Preferences:
 	def __init__(self):
+		self.load_ui()
 		self.create_model()
 
-	def open_prefs(self, widget, event, data = None):
+	def load_ui(self):
 		self.gladefile = "preferences.glade"
 		self.glade = gtk.Builder()
 		self.glade.add_from_file(self.gladefile)
 		self.glade.connect_signals(self)
+		self.liststore = self.glade.get_object('urls')
 
+	def open_prefs(self, widget, event, data = None):
+		self.load_ui()
 		self.create_model()
 		treeView = self.glade.get_object('treeview')
 		treeView.set_model(self.liststore)
@@ -30,10 +34,10 @@ class Preferences:
 
 	def load_prefs(self):
 		fileHandle = open('config.txt')
-		return fileHandle.readlines()
+		file_lines = fileHandle.readlines()
+		return [line.replace('\n', '') for line in file_lines]
 
 	def create_model(self):
-		self.liststore = gtk.ListStore(gobject.TYPE_BOOLEAN, str)
 		for act in self.load_prefs():
 			self.liststore.append([True, act])
 
@@ -48,10 +52,16 @@ class Preferences:
 		fileHandle = open('config.txt', 'w')
 		for config in self.liststore:
 			fileHandle.write(config[1])
+			fileHandle.write('\n')
 		fileHandle.close()
 
 	def on_enabled_toggled(self, model, path):
-		iter = model.get_iter_from_string("0:0")
+		iter = model.get_iter_from_string(path)
+		model.set_value(iter, 0, not model.get_value(iter, 0))
+
+	def on_url_edited(self, model, path, new_text):
+		iter = model.get_iter_from_string(path)
+		model.set_value(iter, 1, new_text)
 
 if __name__ == "__main__":
 	pref = Preferences()

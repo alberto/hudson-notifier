@@ -2,8 +2,15 @@
 <interface>
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
+  <object class="GtkListStore" id="urls">
+    <columns>
+      <!-- column-name Enabled -->
+      <column type="gboolean"/>
+      <!-- column-name Url -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
   <object class="GtkDialog" id="preferences">
-    <property name="visible">True</property>
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Preferences</property>
     <property name="window_position">center</property>
@@ -40,6 +47,7 @@
                   <object class="GtkCellRendererText" id="url_renderer">
                     <property name="editable">True</property>
                     <property name="font">Normal</property>
+                    <signal name="edited" handler="on_url_edited" object="urls"/>
                   </object>
                   <attributes>
                     <attribute name="text">1</attribute>
@@ -99,13 +107,5 @@
       <action-widget response="0">add</action-widget>
       <action-widget response="0">close</action-widget>
     </action-widgets>
-  </object>
-  <object class="GtkListStore" id="urls">
-    <columns>
-      <!-- column-name Enabled -->
-      <column type="gboolean"/>
-      <!-- column-name Url -->
-      <column type="gchararray"/>
-    </columns>
   </object>
 </interface>
