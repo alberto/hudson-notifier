@@ -44,8 +44,11 @@ class Preferences:
 	def on_add_clicked(self, treeView):
 		print "add clicked"
 
-	def on_close_clicked(self, treeView):
+	def on_apply_clicked(self, treeView):
 		self.save_prefs()
+		gtk.Widget.destroy(self.window)
+
+	def on_cancel_clicked(self, treeView):
 		gtk.Widget.destroy(self.window)
 
 	def save_prefs(self):
