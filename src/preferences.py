@@ -19,8 +19,8 @@ class Preferences:
 	def open_prefs(self, widget, event, data = None):
 		self.load_ui()
 		self.create_model()
-		treeView = self.glade.get_object('treeview')
-		treeView.set_model(self.liststore)
+		self.treeView = self.glade.get_object('treeview')
+		self.treeView.set_model(self.liststore)
 		self.window = self.glade.get_object('preferences')
 		self.window.show_all()
 
@@ -41,8 +41,14 @@ class Preferences:
 		for act in self.load_prefs():
 			self.liststore.append([True, act])
 
-	def on_add_clicked(self, treeView):
-		print "add clicked"
+	def on_add_clicked(self, button):
+		self.liststore.append([True, ""])
+		self.focus_on_last_row()
+
+	def focus_on_last_row(self):
+		row = len(self.liststore) - 1
+		column = self.treeView.get_column(1)
+		self.treeView.set_cursor(row, column, True)
 
 	def on_apply_clicked(self, treeView):
 		self.save_prefs()
