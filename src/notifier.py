@@ -12,9 +12,9 @@ class Notifier():
 	FAILURE_IMG = os.path.abspath(dir_path + '/../imgs/failure.png')
 
 	statuses = {
-		'success' : [ '"%s" %s successfully built.', SUCCESS_IMG, pynotify.URGENCY_LOW],
-		'unstable' : [ '"%s" %s is unstable.', UNSTABLE_IMG, pynotify.URGENCY_NORMAL],
-		'failure' : [ '"%s" %s failed!', FAILURE_IMG, pynotify.URGENCY_CRITICAL]
+		'success' : [ '"%s" #%s successfully built.', SUCCESS_IMG, pynotify.URGENCY_LOW],
+		'unstable' : [ '"%s" #%s is unstable.', UNSTABLE_IMG, pynotify.URGENCY_NORMAL],
+		'failure' : [ '"%s" #%s failed!', FAILURE_IMG, pynotify.URGENCY_CRITICAL]
 	}
 
 	def __init__(self):
@@ -45,10 +45,22 @@ class Notifier():
 
 	def _get_build_info(self, item):
 		item = item.split(' ')
-		job, build = item[0], item[1]
-		status = item[2].replace('(', '').replace(')', '').lower()
+		job = item[0]
+		build = self._parse_build_number(item[1])
+		status = self._parse_status(item[2])
 		return build, job, status
 
+	def _parse_build_number(self, build):
+		build_number = build.replace('#', '')
+		return int(build_number)
+
+	def _parse_status(self, status):
+		return status.replace('(', '').replace(')', '').lower()
+
 	def _is_old_build(self, job, build, status):
-		return (job in self.last_displayed
-			and self.last_displayed[job] == (build, status))
+		if not job in self.last_displayed:
+			return False
+		(last_build, last_status) = self.last_displayed[job]
+		if last_build < build:
+			return False
+		return True
