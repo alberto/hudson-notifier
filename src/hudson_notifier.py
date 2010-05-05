@@ -3,13 +3,13 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 from poller_factory import PollerFactory
-from preferences import Preferences
+from preferences.preferences import PreferencesView
 import gobject
 import os
 
 class HudsonNotifierUI:
 	def __init__(self):
-		self.preferences = Preferences()
+		self.preferences_view = PreferencesView()
 		self.poller = PollerFactory().get()
 		self.configure_ui()
 		gobject.timeout_add(6000, self.poll)
@@ -31,13 +31,13 @@ class HudsonNotifierUI:
 		self.statusIcon.connect('popup-menu', self.popup_menu_cb, self.menu)
 
 		self.menuItem = self.glade.get_object('preferences')
-		self.menuItem.connect('activate', self.preferences.open_prefs, self.statusIcon)
+		self.menuItem.connect('activate', self.preferences_view.open_prefs, self.statusIcon)
 
 		self.menuItem = self.glade.get_object('quit')
 		self.menuItem.connect('activate', self.on_quit_activate, self.statusIcon)
 
 	def poll(self):
-		urls = self.preferences.getUrls()
+		urls = self.preferences_view.getUrls()
 		return self.poller.poll(urls)
 
 	def on_quit_activate(self, widget, data = None):
