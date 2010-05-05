@@ -42,12 +42,12 @@ class PreferencesView:
 		self.liststore.clear()
 		for setting in settings:
 			self._add_setting(setting)
-		self._add_setting("")
+		self.liststore.append([True, ""])
 		self.treeView.set_model(self.liststore)
 		self.show()
 
 	def _add_setting(self, setting):
-		self.liststore.append([True, setting])
+		self.liststore.append([True, setting.url])
 
 	def _update_feed_settings(self, model, iter, column, new_text):
 		row = model.get_string_from_iter(iter)
