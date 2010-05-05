@@ -3,10 +3,11 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 from preferences_presenter import PreferencesPresenter
+from settings_repository import SettingsRepository
 
 class PreferencesView:
 	def __init__(self):
-		self.presenter = PreferencesPresenter(self)
+		self.presenter = PreferencesPresenter(self, SettingsRepository())
 
 	def on_apply_clicked(self, treeView):
 		self.presenter.save_prefs()
