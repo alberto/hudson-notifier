@@ -5,7 +5,6 @@ import gtk
 
 class Preferences:
 	def __init__(self):
-#		self._init_ui()
 		self.presenter = Presenter(self)
 
 	def on_apply_clicked(self, treeView):
@@ -15,13 +14,9 @@ class Preferences:
 	def on_cancel_clicked(self, treeView):
 		gtk.Widget.destroy(self.window)
 
-#	def on_enabled_toggled(self, model, path):
-#		iter = model.get_iter_from_string(path)
-#		model.set_value(iter, 0, not model.get_value(iter, 0))
-
 	def on_url_edited(self, model, path, new_text):
 		iter = model.get_iter_from_string(path)
-		self._update_model(model, iter, 1, new_text)
+		self._update_feed_settings(model, iter, 1, new_text)
 
 	def open_prefs(self, widget, event, data = None):
 		self.presenter.open_prefs()
@@ -31,12 +26,6 @@ class Preferences:
 
 	def getUrls(self):
 		return self.presenter.get_urls()
-#		urls = []
-#		for entry in self.liststore:
-#			if not entry[0]:
-#				continue
-#			urls.append(entry[1])
-#		return urls
 
 	def init_ui(self):
 		self.gladefile = "preferences.glade"
@@ -47,43 +36,20 @@ class Preferences:
 		self.treeView = self.glade.get_object('treeview')
 		self.window = self.glade.get_object('preferences')
 
-#	def create_model(self, urls):
-#		for act in self.presenter._load_prefs():
-#			self.liststore.append([True, act])
-
-	def refresh_model(self, prefs):
-		for act in prefs:
-			self.liststore.append([True, act])
+	def update_feeds_list(self, settings):
+		self.liststore.clear()
+		for setting in settings:
+			self._add_setting(setting)
+		self._add_setting("")
 		self.treeView.set_model(self.liststore)
+		self.show()
 
+	def _add_setting(self, setting):
+		self.liststore.append([True, setting])
 
-	def _update_model(self, model, iter, column, new_text):
-		last_row = str(self.get_index_of_last_row())
+	def _update_feed_settings(self, model, iter, column, new_text):
 		row = model.get_string_from_iter(iter)
-		if (row != last_row and new_text == ""):
-			model.remove(iter)
-			self.treeView.set_model(model)
-			return
-
-		if (row == last_row and new_text != ""):
-			self.liststore.append([True, ""])
-		model.set_value(iter, 1, new_text)
-
-	def _get_number_of_elements(self):
-		return len(self.liststore)
-
-	def get_index_of_last_row(self):
-		return self._get_number_of_elements() - 1
-
-#	def focus_on_last_row(self):
-#		row = self.get_index_of_last_row()
-#		column = self.treeView.get_column(1)
-#		self.treeView.set_cursor(row, column, True)
-
-if __name__ == "__main__":
-	pref = Preferences()
-	pref.open_prefs(None, None, None)
-	gtk.main()
+		self.presenter.update_setting(int(row), new_text)
 
 class Presenter():
 	def __init__(self, view):
@@ -91,25 +57,48 @@ class Presenter():
 		self.model = self._load_prefs()
 
 	def save_prefs(self):
-		fileHandle = open('config.txt', 'w')
-		for config in self.view.liststore:
-			fileHandle.write(config[1])
-			fileHandle.write('\n')
+		fileHandle = open('feed_setting.txt', 'w')
+		for feed_setting in self.model:
+			self._save_setting(fileHandle, feed_setting)
 		fileHandle.close()
+
+	def _save_setting(self, fileHandle, feed_setting):
+		fileHandle.write(feed_setting[1])
+		fileHandle.write('\n')
 
 	def open_prefs(self):
 		self.view.init_ui()
 		self.model = self._load_prefs()
-		self.view.refresh_model(self.model)
+		self.view.update_feeds_list(self.model)
 		self.view.show()
+
+	def update_setting(self, row, url):
+		if (len(self.model) == row):
+			if (url != ""):
+				self.model.append(url)
+		elif (url == ""):
+			self.model.pop(row)
+		else:
+			self.model[row] = url
+		self.view.update_feeds_list(self.model)
 
 	def _load_prefs(self):
 		fileHandle = open('config.txt')
 		file_lines = fileHandle.readlines()
-		lines = [line.replace('\n', '') for line in file_lines]
-		if len(lines) == 0 or lines[-1] != "":
-			lines.append("")
+		lines = []
+		for line in file_lines:
+			line = line.replace('\n', '')
+			if (line == ""):
+				continue
+			lines.append(line)
 		return lines
 
 	def get_urls(self):
 		return self.model
+
+	def get_number_of_elements(self):
+		return len(self.model)
+
+#class HudsonFeed():
+#	def __init__(self):
+#		self.url = ""
