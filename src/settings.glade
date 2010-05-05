@@ -10,7 +10,7 @@
       <column type="gchararray"/>
     </columns>
   </object>
-  <object class="GtkDialog" id="preferences">
+  <object class="GtkDialog" id="settings">
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Preferences</property>
     <property name="window_position">center</property>
@@ -34,7 +34,6 @@
                 <child>
                   <object class="GtkCellRendererToggle" id="enabled">
                     <property name="visible">False</property>
-                    <signal name="toggled" handler="on_enabled_toggled" object="urls"/>
                   </object>
                   <attributes>
                     <attribute name="active">0</attribute>

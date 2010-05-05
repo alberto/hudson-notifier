@@ -2,12 +2,12 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-from preferences_presenter import PreferencesPresenter
+from presenter import SettingsPresenter
 from settings_repository import SettingsRepository
 
-class PreferencesView:
+class SettingsView:
 	def __init__(self):
-		self.presenter = PreferencesPresenter(self, SettingsRepository())
+		self.presenter = SettingsPresenter(self, SettingsRepository())
 
 	def on_apply_clicked(self, treeView):
 		self.presenter.save_prefs()
@@ -30,13 +30,13 @@ class PreferencesView:
 		return self.presenter.get_urls()
 
 	def init_ui(self):
-		self.gladefile = "preferences.glade"
+		self.gladefile = "settings.glade"
 		self.glade = gtk.Builder()
 		self.glade.add_from_file(self.gladefile)
 		self.glade.connect_signals(self)
 		self.liststore = self.glade.get_object('urls')
 		self.treeView = self.glade.get_object('treeview')
-		self.window = self.glade.get_object('preferences')
+		self.window = self.glade.get_object('settings')
 
 	def update_feeds_list(self, settings):
 		self.liststore.clear()

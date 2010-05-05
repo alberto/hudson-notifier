@@ -3,7 +3,7 @@ import pygtk
 from hudson_feed_setting import HudsonFeedSetting
 pygtk.require('2.0')
 
-class PreferencesPresenter():
+class SettingsPresenter():
 	def __init__(self, view, repository):
 		self.view = view
 		self.repository = repository

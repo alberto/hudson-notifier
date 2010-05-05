@@ -10,7 +10,7 @@
   <object class="GtkMenu" id="menu">
     <property name="visible">True</property>
     <child>
-      <object class="GtkImageMenuItem" id="preferences">
+      <object class="GtkImageMenuItem" id="settings">
         <property name="label">gtk-preferences</property>
         <property name="visible">True</property>
         <property name="use_underline">True</property>
