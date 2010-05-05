@@ -2,7 +2,7 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-from notifier import Notifier
+from poller_factory import PollerFactory
 from preferences import Preferences
 import gobject
 import os
@@ -10,7 +10,7 @@ import os
 class HudsonNotifierUI:
 	def __init__(self):
 		self.preferences = Preferences()
-		self.notifier = Notifier()
+		self.poller = PollerFactory().get()
 		self.configure_ui()
 		gobject.timeout_add(6000, self.poll)
 		gtk.main()
@@ -38,7 +38,7 @@ class HudsonNotifierUI:
 
 	def poll(self):
 		urls = self.preferences.getUrls()
-		return self.notifier.poll(urls)
+		return self.poller.poll(urls)
 
 	def on_quit_activate(self, widget, data = None):
 		gtk.main_quit()
