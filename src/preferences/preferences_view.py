@@ -4,7 +4,6 @@ pygtk.require('2.0')
 import gtk
 from preferences_presenter import PreferencesPresenter
 
-
 class PreferencesView:
 	def __init__(self):
 		self.presenter = PreferencesPresenter(self)

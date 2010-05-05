@@ -3,7 +3,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 from poller_factory import PollerFactory
-from preferences.preferences import PreferencesView
+from preferences.preferences_view import PreferencesView
 import gobject
 import os
 
