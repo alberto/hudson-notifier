@@ -1,1 +1,1 @@
-http://www.newdawnsoftware.com/hudson/job/Ardor3d/rssAll
+http://www.newdawnsoftware.com/hudson/rssAll

@@ -29,7 +29,7 @@ class SettingsPresenter():
 		self.view.update_feeds_list(self.model)
 
 	def get_urls(self):
-		return self.model
+		return [setting.url for setting in self.model]
 
 	def get_number_of_elements(self):
 		return len(self.model)

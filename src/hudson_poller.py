@@ -19,18 +19,8 @@ class HudsonPoller():
 		return True
 
 	def _get_build_info(self, item):
-		item = item.split(' ')
-		job = item[0]
-		build = self._parse_build_number(item[1])
-		status = self._parse_status(item[2])
-		return build, job, status
-
-	def _parse_build_number(self, build):
-		build_number = build.replace('#', '')
-		return int(build_number)
-
-	def _parse_status(self, status):
-		return status.replace('(', '').replace(')', '').lower()
+		parser = RssParser()
+		return parser.parse(item)
 
 	def _is_old_build(self, job, build, status):
 		if not job in self.last_displayed:
@@ -39,3 +29,20 @@ class HudsonPoller():
 		if build > last_build:
 			return False
 		return True
+
+class RssParser():
+	def parse(self, rss_item):
+		hash = rss_item.rfind("#")
+		left_paren = rss_item.rfind("(")
+		right_paren = rss_item.rfind(")")
+		job = rss_item[0:hash]
+		build = rss_item[hash + 1:left_paren]
+		status = rss_item[left_paren + 1:right_paren].lower()
+		return build, job, status
+
+	def _parse_build_number(self, build):
+		build_number = build.replace('#', '')
+		return int(build_number)
+
+	def _parse_status(self, status):
+		return status.replace('(', '').replace(')', '').lower()
