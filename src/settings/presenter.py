@@ -28,8 +28,16 @@ class SettingsPresenter():
 			self.model[row] = HudsonFeedSetting(url)
 		self.view.update_feeds_list(self.model)
 
+	def toggle_enabled(self, row):
+		if (row >= len(self.model)):
+			return
+		self.model[row].enabled = not self.model[row].enabled
+		self.view.update_feeds_list(self.model)
+
 	def get_urls(self):
-		return [setting.url for setting in self.model]
+		settings = self.repository.get()
+		enabled_settings = filter(lambda x: x.enabled, settings)
+		return map(lambda x: x.url, enabled_settings)
 
 	def get_number_of_elements(self):
 		return len(self.model)

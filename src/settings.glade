@@ -26,14 +26,14 @@
           <object class="GtkTreeView" id="treeview">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="resize_mode">immediate</property>
             <property name="model">urls</property>
             <child>
               <object class="GtkTreeViewColumn" id="enabled_column">
-                <property name="visible">False</property>
                 <property name="title">Enabled</property>
                 <child>
                   <object class="GtkCellRendererToggle" id="enabled">
-                    <property name="visible">False</property>
+                    <signal name="toggled" handler="on_enabled_toggled" object="urls"/>
                   </object>
                   <attributes>
                     <attribute name="active">0</attribute>

@@ -17,8 +17,12 @@ class SettingsView:
 		gtk.Widget.destroy(self.window)
 
 	def on_url_edited(self, model, path, new_text):
-		iter = model.get_iter_from_string(path)
-		self._update_feed_settings(model, iter, 1, new_text)
+		row = int(path)
+		self.presenter.update_setting(row, new_text)
+
+	def on_enabled_toggled(self, model, path):
+		row = int(path)
+		self.presenter.toggle_enabled(row)
 
 	def open_prefs(self, widget, event, data = None):
 		self.presenter.open_prefs()
@@ -42,13 +46,9 @@ class SettingsView:
 		self.liststore.clear()
 		for setting in settings:
 			self._add_setting(setting)
-		self.liststore.append([True, ""])
+		self.liststore.append([False, ""])
 		self.treeView.set_model(self.liststore)
 		self.show()
 
 	def _add_setting(self, setting):
-		self.liststore.append([True, setting.url])
-
-	def _update_feed_settings(self, model, iter, column, new_text):
-		row = model.get_string_from_iter(iter)
-		self.presenter.update_setting(int(row), new_text)
+		self.liststore.append([setting.enabled, setting.url])

@@ -2,6 +2,7 @@
 
 class HudsonFeedSetting():
 	def __init__(self, url):
+		self.enabled = True
 		self.url = url
 
 	def __unicode__(self):
