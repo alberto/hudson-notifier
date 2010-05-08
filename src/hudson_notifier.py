@@ -12,7 +12,8 @@ class HudsonNotifierUI:
 		self.settings_view = SettingsView()
 		self.poller = PollerFactory().get()
 		self.configure_ui()
-		gobject.timeout_add(6000, self.poll)
+		gobject.timeout_add(100, self.poll_first_time)
+		gobject.timeout_add(60000, self.poll)
 		gtk.main()
 
 	def configure_ui(self):
@@ -35,6 +36,10 @@ class HudsonNotifierUI:
 
 		self.menuItem = self.glade.get_object('quit')
 		self.menuItem.connect('activate', self.on_quit_activate, self.statusIcon)
+
+	def poll_first_time(self):
+		self.poll()
+		return False
 
 	def poll(self):
 		urls = self.settings_view.getUrls()
