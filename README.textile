@@ -1,0 +1,5 @@
+h1. Hudson Notifier
+
+"Hudson Notifier":http://github.com/alberto/hudson-notifier is a small Linux application that sits on your system tray and notifies you about changes in your "Hudson": http://hudson-ci.org/ projects.
+
+Hudson Notifier is available as an open source product under the "Apache License, Version 2.0": http://www.apache.org/licenses/LICENSE-2.0
