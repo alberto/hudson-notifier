@@ -5,9 +5,11 @@ h1. Hudson Notifier
 Hudson Notifier is available as an open source product under the "Apache License, Version 2.0":http://www.apache.org/licenses/LICENSE-2.0
 
 h2. How to install hudson notifier
+
 Just download and uncompress it wherever you want. That's it.
 
 h2. Usage
+
 Execute the file @./src/hudson-notifier.py@.
 
 h2. Configuration
