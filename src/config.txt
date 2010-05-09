@@ -1,2 +1,0 @@
-False|http://www.newdawnsoftware.com/hudson/view/DGLES/rssAll
-False|http://www.newdawnsoftware.com/hudson/view/JInput/rssAll

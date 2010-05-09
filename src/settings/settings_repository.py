@@ -6,16 +6,20 @@ pygtk.require('2.0')
 
 class SettingsRepository():
 	def get(self):
-		fileHandle = open('config.txt')
-		file_lines = fileHandle.readlines()
 		settings = []
-		for line in file_lines:
-			line = line.replace('\n', '')
-			if (line == ""):
-				continue
-			setting = self._setting_from_format(line)
-			settings.append(setting)
-		return settings
+		try:
+			fileHandle = open('config.txt')
+			file_lines = fileHandle.readlines()
+			for line in file_lines:
+				line = line.replace('\n', '')
+				if (line == ""):
+					continue
+				setting = self._setting_from_format(line)
+				settings.append(setting)
+		except IOError:
+			pass
+		finally:
+			return settings
 
 	def save(self, settings):
 		fileHandle = open('config.txt', 'w')
