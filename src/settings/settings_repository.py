@@ -13,11 +13,9 @@ class SettingsRepository():
 			fileHandle = open(self.__file)
 			file_lines = fileHandle.readlines()
 			for line in file_lines:
-				line = line.replace('\n', '')
-				if (line == ""):
-					continue
-				setting = self._setting_from_format(line)
+				setting = self.__get_setting(line)
 				settings.append(setting)
+			fileHandle.close()
 		except IOError:
 			pass
 		finally:
@@ -26,10 +24,16 @@ class SettingsRepository():
 	def save(self, settings):
 		fileHandle = open(self.__file, 'w')
 		for feed_setting in settings:
-			self._save_setting(fileHandle, feed_setting)
+			self.__save_setting(fileHandle, feed_setting)
 		fileHandle.close()
 
-	def _save_setting(self, fileHandle, feed_setting):
+	def __get_setting(self, line):
+		line = line.replace('\n', '')
+		if (line == ""):
+			return
+		return self._setting_from_format(line)
+
+	def __save_setting(self, fileHandle, feed_setting):
 		fileHandle.write(self._format_setting(feed_setting))
 		fileHandle.write('\n')
 
