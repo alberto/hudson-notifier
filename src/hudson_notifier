@@ -1,0 +1,6 @@
+#!/usr/bin/python
+from hudson_notifier import HudsonNotifierUI
+
+if __name__ == "__main__":
+	hn = HudsonNotifierUI()
+	hn.main()
