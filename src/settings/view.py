@@ -4,10 +4,12 @@ pygtk.require('2.0')
 import gtk
 from presenter import SettingsPresenter
 from settings_repository import SettingsRepository
+import os
 
 class SettingsView:
 	def __init__(self):
-		self.presenter = SettingsPresenter(self, SettingsRepository())
+		self.__dir_path = os.path.dirname(__file__)
+		self.presenter = SettingsPresenter(self, SettingsRepository(self.__dir_path + '/config.txt'))
 
 	def on_apply_clicked(self, treeView):
 		self.presenter.save_prefs()
@@ -34,7 +36,8 @@ class SettingsView:
 		return self.presenter.get_urls()
 
 	def init_ui(self):
-		self.gladefile = "settings.glade"
+		SETTINGS_GLADE = os.path.abspath(self.__dir_path + '/../settings.glade')
+		self.gladefile = SETTINGS_GLADE
 		self.glade = gtk.Builder()
 		self.glade.add_from_file(self.gladefile)
 		self.glade.connect_signals(self)

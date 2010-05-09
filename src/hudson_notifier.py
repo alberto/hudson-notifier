@@ -17,12 +17,13 @@ class HudsonNotifierUI:
 		gtk.main()
 
 	def configure_ui(self):
-		self.gladefile = "main.glade"
+		dir_path = os.path.dirname(__file__)
+		MAIN_GLADE = os.path.abspath(dir_path + '/main.glade')
+		self.gladefile = MAIN_GLADE
 		self.glade = gtk.Builder()
 		self.glade.add_from_file(self.gladefile)
 
 		self.statusIcon = self.glade.get_object('tray_icon')
-		dir_path = os.path.dirname(__file__)
 		LOGO_IMG = os.path.abspath(dir_path + '/../imgs/logo.png')
 		self.statusIcon.set_from_file(LOGO_IMG)
 		self.connect_events()

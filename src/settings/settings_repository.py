@@ -1,14 +1,16 @@
 #!/usr/bin/python
 import pygtk
-from hudson_feed_setting import HudsonFeedSettingFactory
 from hudson_feed_setting import HudsonFeedSetting
 pygtk.require('2.0')
 
 class SettingsRepository():
+	def __init__(self, file):
+		self.__file = file
+
 	def get(self):
 		settings = []
 		try:
-			fileHandle = open('config.txt')
+			fileHandle = open(self.__file)
 			file_lines = fileHandle.readlines()
 			for line in file_lines:
 				line = line.replace('\n', '')
@@ -22,7 +24,7 @@ class SettingsRepository():
 			return settings
 
 	def save(self, settings):
-		fileHandle = open('config.txt', 'w')
+		fileHandle = open(self.__file, 'w')
 		for feed_setting in settings:
 			self._save_setting(fileHandle, feed_setting)
 		fileHandle.close()
