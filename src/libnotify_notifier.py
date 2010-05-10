@@ -17,7 +17,6 @@ class LibNotifyNotifier():
 	}
 
 	def __init__(self):
-		self.last_displayed = dict()
 		pynotify.init('Hudson Notifier')
 
 	def notify(self, job_result):
