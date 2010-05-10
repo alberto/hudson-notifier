@@ -5,7 +5,7 @@ class RssParser():
 		hash = rss_item.rfind("#")
 		left_paren = rss_item.rfind("(")
 		right_paren = rss_item.rfind(")")
-		job = str.strip(rss_item[0:hash])
+		job = unicode.strip(rss_item[0:hash])
 		build = rss_item[hash + 1:left_paren]
 		status = rss_item[left_paren + 1:right_paren].lower()
 		return JobResult(job, build, status)
