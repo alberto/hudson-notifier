@@ -16,7 +16,7 @@ class HudsonPoller():
 
 				self.notifier.notify(job_result).show()
 				self.__add_job_result(job_result)
-		return True
+		return self.job_results.itervalues()
 
 	def __get_job_results(self, url):
 		feed = feedparser.parse(url)
@@ -35,9 +35,6 @@ class HudsonPoller():
 		if job_result.build_number > last_build:
 			return False
 		return True
-
-	def get_results(self):
-		return self.job_results
 
 	def __add_job_result(self, job_result):
 		self.job_results[job_result.job] = job_result

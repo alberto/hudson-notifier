@@ -17,15 +17,14 @@ class HudsonNotifierUI:
 		gtk.main()
 
 	def configure_ui(self):
-		dir_path = os.path.dirname(__file__)
-		MAIN_GLADE = os.path.abspath(dir_path + '/main.glade')
+		self.dir_path = os.path.dirname(__file__)
+		MAIN_GLADE = os.path.abspath(self.dir_path + '/main.glade')
 		self.gladefile = MAIN_GLADE
 		self.glade = gtk.Builder()
 		self.glade.add_from_file(self.gladefile)
 
 		self.statusIcon = self.glade.get_object('tray_icon')
-		LOGO_IMG = os.path.abspath(dir_path + '/../imgs/logo.png')
-		self.statusIcon.set_from_file(LOGO_IMG)
+		self.set_success_icon()
 		self.liststore = self.glade.get_object('job_results')
 		self.treeView = self.glade.get_object('treeview')
 		self.connect_events()
@@ -49,7 +48,24 @@ class HudsonNotifierUI:
 
 	def poll(self):
 		urls = self.settings_view.getUrls()
-		return self.poller.poll(urls)
+		self.results = self.poller.poll(urls)
+		self.update_icon()
+		return True
+
+	def update_icon(self):
+		failures = filter(lambda x: x.status == 'failure', self.results)
+		if len(failures) == 0:
+			self.set_success_icon()
+		else:
+			self.set_fail_icon()
+
+	def set_success_icon(self):
+		LOGO = os.path.abspath(self.dir_path + '/../imgs/logo.png')
+		self.statusIcon.set_from_file(LOGO)
+
+	def set_fail_icon(self):
+		LOGO = os.path.abspath(self.dir_path + '/../imgs/logo_fail.png')
+		self.statusIcon.set_from_file(LOGO)
 
 	def on_quit_activate(self, widget, data = None):
 		gtk.main_quit()
@@ -71,9 +87,9 @@ class HudsonNotifierUI:
 	def toggle_jobs(self, window):
 		visibility = window.get_property('visible')
 		if visibility == False:
-			jobs = self.poller.get_results()
+			jobs = self.results
 			self.liststore.clear()
-			for job in jobs.itervalues():
+			for job in jobs:
 				self.liststore.append([job.job, job.build_number, job.status])
 			self.treeView.set_model(self.liststore)
 			window.show_all()
