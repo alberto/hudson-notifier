@@ -16,7 +16,7 @@ class HudsonPoller():
 
 				self.notifier.notify(job_result).show()
 				self.__add_job_result(job_result)
-		return self.job_results.itervalues()
+		return self.job_results
 
 	def __get_job_results(self, url):
 		feed = feedparser.parse(url)
