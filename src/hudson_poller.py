@@ -11,8 +11,10 @@ class HudsonPoller():
 		for url in urls:
 			job_results = self.__get_job_results(url)
 			for job_result in job_results:
-				if not self._is_old_build(job_result):
-					self.notifier.notify(job_result).show()
+				if self._is_old_build(job_result):
+					continue
+
+				self.notifier.notify(job_result).show()
 				self.__add_job_result(job_result)
 		return True
 
