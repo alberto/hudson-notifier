@@ -9,8 +9,11 @@ h2. Screenshots
 "See how it looks like":http://wiki.github.com/alberto/hudson-notifier/screenshots
 
 h2. How to install hudson notifier
+You need feedparser. On Debian based systems you can install it as follows:
+sudo apt-get install python-setuptools
+easy_install feedparser
 
-Just download and uncompress it wherever you want. That's it.
+Download Hudson notifier and uncompress it wherever you want. That's it.
 
 h2. Usage
 
